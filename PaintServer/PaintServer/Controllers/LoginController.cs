@@ -17,11 +17,13 @@ namespace PaintServer.Controllers
 
             AutorizationResultData autorizationResultData = new AutorizationResultData()
             {
-                UserID = 1,
+                UserId = 100,
                 FirstName = "Ilya",
                 LastName = "Zhdaney",
                 Login = "zhdaney@gmail.com",
-                AutorizationResultCode = 200
+                //AutorizationResultCode = 200,
+                AutorizationResultMessage = ""
+
             };
                 return Ok(autorizationResultData);
             }
