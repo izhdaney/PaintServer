@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PaintServer.DTO;
 using PaintServer.DAL;
+using Microsoft.Extensions.Options;
 
 namespace PaintServer.Services
 {
@@ -11,7 +12,7 @@ namespace PaintServer.Services
     {
         public AutorizationResultData AutorizeUser(UserAutorizationData userAutorizationData)
         {
-            //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
+            //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
             AutorizationDAL autorizationDAL = new AutorizationDAL();
 

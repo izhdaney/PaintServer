@@ -8,7 +8,7 @@ namespace PaintServer.DTO
 {
     public class AutorizationResultData
     {
-       // public int AutorizationResultCode { get; set; }
+        public int AutorizationResultCode { get; set; }
         public int UserId { get; set; }
         public string AutorizationResultMessage { get; set; }
         public string Login { get; set; }
