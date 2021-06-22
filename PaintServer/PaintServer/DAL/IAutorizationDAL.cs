@@ -10,9 +10,7 @@ namespace PaintServer.DAL
     {
         AutorizationResultData Autorization(string login, string password);
 
-        //void Registration();
-
-
+        RegistrationResultData Registration(string login, string password, string firstName, string lastName);
 
     }
 }
