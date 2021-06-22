@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PaintServer.DTO
 {
-    public class SavedImage : SavedImageInfo
+    public class SavedImage : SaveImageInfo
     {
         public string ImageData { get; set; }
     }
