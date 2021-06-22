@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaintServer.DTO;
 using System.Net;
+using PaintServer.Services;
 
 namespace PaintServer.Controllers
 {
@@ -15,16 +16,8 @@ namespace PaintServer.Controllers
             {
             //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
 
-            AutorizationResultData autorizationResultData = new AutorizationResultData()
-            {
-                UserId = 100,
-                FirstName = "Ilya",
-                LastName = "Zhdaney",
-                Login = "zhdaney@gmail.com",
-                //AutorizationResultCode = 200,
-                AutorizationResultMessage = ""
+            AutorizationResultData autorizationResultData = new AutorizationService().AutorizeUser(userAutorizationData);
 
-            };
                 return Ok(autorizationResultData);
             }
     }
