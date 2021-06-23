@@ -8,6 +8,6 @@ namespace PaintServer.DAL
 {
    public interface IOperationDAL
     {
-        SaveImageResultData SaveImage(string name,int size,string imageType, int userId, DateTime dateTime);
+        SaveImageResultData SaveImage(string name,int size,string imageType, int userId, DateTime dateTime, string ImageData);
     }
 }
