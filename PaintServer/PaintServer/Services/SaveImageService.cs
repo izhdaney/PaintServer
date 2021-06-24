@@ -15,7 +15,7 @@ namespace PaintServer.Services
 
             OperationDAL operationDAL = new OperationDAL();
 
-            SaveImageResultData saveImageResultData = operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, DateTime.Now);
+            SaveImageResultData saveImageResultData = operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, DateTime.Now,saveImageInfo.ImageData);
 
             return saveImageResultData;
 
