@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Team_Project_Paint.Class;
 using Team_Project_Paint.Class.FigureDrawingClass;
 using Team_Project_Paint.Class.OperationWithFigures;
@@ -17,7 +18,9 @@ namespace Team_Project_Paint.Interfaces
         ShapeSize Size { get; set; }
         EShapeType Name { get; }
         EShapeStatus EShapeStatus { get; set; }
-       
-        
+
+        List<ShapePoint> ShapePoints { get; set; }
+
+
     }
 }

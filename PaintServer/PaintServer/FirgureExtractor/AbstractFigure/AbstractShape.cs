@@ -34,6 +34,6 @@ namespace Team_Project_Paint.Class
             set { _eHsapeStatus = value; }
         }
 
-        
+        public List<ShapePoint> ShapePoints { get; set; }
     }
 }
