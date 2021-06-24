@@ -46,5 +46,30 @@ namespace PaintServer.DAL
 
             }
         }
+
+        public int GetImageId(string name, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
+                {
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["ImageName"];
+                        var b = reader["UserId"];
+
+                        if (name == a.ToString() && userId == (int)(b))
+                        {
+                            var imageId = reader["ImageId"];
+
+                            return (int)(imageId);
+                        }
+                    }
+                    return 0;
+                }
+            }
+        }
     }
 }
