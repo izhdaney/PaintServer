@@ -13,7 +13,7 @@ namespace PaintServer.Services
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            OperationDAL operationDAL = new OperationDAL();
+            IOperationDAL operationDAL = new OperationDALmsSQL();
 
             LoadImageResultData loadImageResultData = operationDAL.LoadImage(loadImageInfo.UserId, loadImageInfo.ImageId);
 

@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace PaintServer.DAL
 {
-    public class OperationDAL : IOperationDAL
+    public class OperationDALmsSQL : IOperationDAL
 
     {
-        private SaveImageResultData _saveImageResultData;
-        private LoadImageResultData _loadImageResultData;
-        private GetFilesListResultData _getFilesListResultData;
-
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         public SaveImageResultData SaveImage(string name, int size, string imageType, int userId, DateTime dateTime, string imageData)
         {
+            SaveImageResultData saveImageResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 var queryString = $"INSERT INTO dbo.SavedImages (UserId, ImageName, CreateDate, FileSize,ImageType,ImageData) VALUES ('{userId}','{name}','{dateTime}','{size}','{imageType}','{imageData}')";
@@ -26,44 +23,46 @@ namespace PaintServer.DAL
                     try
                     {
                         command.ExecuteNonQuery();
-                        _saveImageResultData = new SaveImageResultData()
+                        saveImageResultData = new SaveImageResultData()
                         {
                             SaveImageResult = true,
                             SaveImageResultMessage = "Good"
                         };
 
-                        return _saveImageResultData;
+                        return saveImageResultData;
 
                     }
                     catch
                     {
-                        _saveImageResultData = new SaveImageResultData()
+                        saveImageResultData = new SaveImageResultData()
                         {
                             SaveImageResult = false,
                             SaveImageResultMessage = "Error Image not saved"
                         };
 
-                        return _saveImageResultData;
+                        return saveImageResultData;
                     }
                 }
 
             }
         }
 
-        public int GetImageId(string name, int userId)
+        public int GetImageId(string name, int userId, DateTime dateTime)
         {
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
+                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId], [CreateDate]  FROM dbo.SavedImages", connection))
                 {
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
                         var a = reader["ImageName"];
                         var b = reader["UserId"];
+                        var c = reader["CreateDate"];
 
-                        if (name == a.ToString() && userId == (int)(b))
+                        if (name == a.ToString() && userId == (int)(b) && Convert.ToDateTime(c) == dateTime)
                         {
                             var imageId = reader["ImageId"];
 
@@ -77,6 +76,7 @@ namespace PaintServer.DAL
 
         public LoadImageResultData LoadImage(int userId, int imageId)
         {
+            LoadImageResultData loadImageResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -91,7 +91,7 @@ namespace PaintServer.DAL
 
                         if (userId == (int)a && imageId == (int)b)
                         {
-                            _loadImageResultData = new LoadImageResultData()
+                            loadImageResultData = new LoadImageResultData()
                             {
                                 ImageData = reader["ImageData"].ToString(),
                                 ImageType = reader["ImageType"].ToString(),
@@ -99,11 +99,11 @@ namespace PaintServer.DAL
                                 LoadImageResultMessage = "Good"
                             };
 
-                            return _loadImageResultData;
+                            return loadImageResultData;
                         }
                     }
 
-                    _loadImageResultData = new LoadImageResultData()
+                    loadImageResultData = new LoadImageResultData()
                     {
                         ImageData = "",
                         ImageType = "",
@@ -111,20 +111,21 @@ namespace PaintServer.DAL
                         LoadImageResultMessage = "Error Image not opened"
                     };
 
-                    return _loadImageResultData;
+                    return loadImageResultData;
                 }
             }
         }
 
         public GetFilesListResultData GetFilesList(int userId)
         {
+            GetFilesListResultData getFilesListResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 var queryString = $"SELECT [ImageId], [ImageName], [CreateDate], [FileSize], [ImageType]  FROM dbo.SavedImages WHERE ([UserId] = {userId.ToString()}) ORDER BY [CreateDate] DESC";
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(queryString, connection))
                 {
-                    _getFilesListResultData = new GetFilesListResultData();
+                    getFilesListResultData = new GetFilesListResultData();
 
                     var reader = command.ExecuteReader();
                     while (reader.Read())
@@ -137,15 +138,52 @@ namespace PaintServer.DAL
                             CreateDate = Convert.ToDateTime(reader["CreateDate"]),
                             FileSize = (int)reader["FileSize"],
                             ImageType = reader["ImageType"].ToString()
-                            };
+                        };
 
-                        _getFilesListResultData.SavedFileInfo.Add(savedFileInfo);
+                        getFilesListResultData.SavedFileInfo.Add(savedFileInfo);
                     }
 
-                    _getFilesListResultData.GetFilesListResultMessage = "Get files list - OK";
-                    _getFilesListResultData.GetFilesListResult = true;
+                    getFilesListResultData.GetFilesListResultMessage = "Get files list - OK";
+                    getFilesListResultData.GetFilesListResult = true;
 
-                    return _getFilesListResultData;
+                    return getFilesListResultData;
+                }
+            }
+        }
+
+        public DeleteImageResultData DeleteImage(int userId, int imageId)
+        {
+            DeleteImageResultData deleteImageResultData;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages] WHERE (UserID={userId} AND ImageID={imageId})", connection))
+                {
+
+                    var res = command.ExecuteNonQuery();
+                    
+                    if (res==1)
+                    {
+                        deleteImageResultData = new DeleteImageResultData()
+                        {
+
+                            LoadImageResult = true,
+                            LoadImageResultMessage = "Image deleted OK"
+                        };
+                    }
+                    else
+                    {
+                        deleteImageResultData = new DeleteImageResultData()
+                        {
+
+                            LoadImageResult = false,
+                            LoadImageResultMessage = "Error Image not deleted"
+                        };
+                    }
+
+                    
+
+                    return deleteImageResultData;
                 }
             }
         }

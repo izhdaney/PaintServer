@@ -15,12 +15,13 @@ namespace PaintServer.Services
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            OperationDAL operationDAL = new OperationDAL();
-            StatisticDAL statisticDAL = new StatisticDAL();
+            IOperationDAL operationDAL = new OperationDALmsSQL();
+            IStatisticDAL statisticDAL = new StatisticDALmsSQL();
+            DateTime dateTime = DateTime.Now;
 
-            SaveImageResultData saveImageResultData = operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, DateTime.Now,saveImageInfo.ImageData);
+            SaveImageResultData saveImageResultData = operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, dateTime,saveImageInfo.ImageData);
 
-            int lastImageId = operationDAL.GetImageId(saveImageInfo.Name, saveImageInfo.UserId);
+            int lastImageId = operationDAL.GetImageId(saveImageInfo.Name, saveImageInfo.UserId, dateTime);
 
             if (saveImageInfo.ImageType == "json" && lastImageId != 0)
             {
