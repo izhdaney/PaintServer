@@ -11,6 +11,7 @@ namespace PaintServer.DAL
 
     {
         private SaveImageResultData _saveImageResultData;
+        private LoadImageResultData _loadImageResultData;
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         public SaveImageResultData SaveImage(string name, int size, string imageType, int userId, DateTime dateTime, string imageData)
         {
@@ -44,6 +45,72 @@ namespace PaintServer.DAL
                     }
                 }
 
+            }
+        }
+
+        public int GetImageId(string name, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
+                {
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["ImageName"];
+                        var b = reader["UserId"];
+
+                        if (name == a.ToString() && userId == (int)(b))
+                        {
+                            var imageId = reader["ImageId"];
+
+                            return (int)(imageId);
+                        }
+                    }
+                    return 0;
+                }
+            }
+        }
+
+        public LoadImageResultData LoadImage(int userId, int imageId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT [ImageData], [ImageType], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
+                {
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["UserId"];
+                        var b = reader["ImageId"];
+
+                        if (userId == (int)a && imageId == (int)b)
+                        {
+                            _loadImageResultData = new LoadImageResultData()
+                            {
+                                ImageData = reader["ImageData"].ToString(),
+                                ImageType = reader["ImageType"].ToString(),
+                                LoadImageResult = true,
+                                LoadImageResultMessage = "Good"
+                            };
+
+                            return _loadImageResultData;
+                        }
+                    }
+
+                    _loadImageResultData = new LoadImageResultData()
+                    {
+                        ImageData = "",
+                        ImageType = "",
+                        LoadImageResult = false,
+                        LoadImageResultMessage = "Error Image not opened"
+                    };
+
+                    return _loadImageResultData;
+                }
             }
         }
     }
