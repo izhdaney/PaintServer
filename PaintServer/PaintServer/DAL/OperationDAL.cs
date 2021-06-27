@@ -12,6 +12,8 @@ namespace PaintServer.DAL
     {
         private SaveImageResultData _saveImageResultData;
         private LoadImageResultData _loadImageResultData;
+        private GetFilesListResultData _getFilesListResultData;
+
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         public SaveImageResultData SaveImage(string name, int size, string imageType, int userId, DateTime dateTime, string imageData)
         {
@@ -110,6 +112,40 @@ namespace PaintServer.DAL
                     };
 
                     return _loadImageResultData;
+                }
+            }
+        }
+
+        public GetFilesListResultData GetFilesList(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                var queryString = $"SELECT [ImageId], [ImageName], [CreateDate], [FileSize], [ImageType]  FROM dbo.SavedImages WHERE ([UserId] = {userId.ToString()}) ORDER BY [CreateDate] DESC";
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(queryString, connection))
+                {
+                    _getFilesListResultData = new GetFilesListResultData();
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        var savedFileInfo = new SavedFileInfo()
+                        {
+                            ImageId = (int)reader["ImageId"],
+                            ImageName = reader["ImageName"].ToString(),
+                            CreateDate = Convert.ToDateTime(reader["CreateDate"]),
+                            FileSize = (int)reader["FileSize"],
+                            ImageType = reader["ImageType"].ToString()
+                            };
+
+                        _getFilesListResultData.SavedFileInfo.Add(savedFileInfo);
+                    }
+
+                    _getFilesListResultData.GetFilesListResultMessage = "Get files list - OK";
+                    _getFilesListResultData.GetFilesListResult = true;
+
+                    return _getFilesListResultData;
                 }
             }
         }
