@@ -13,7 +13,7 @@ namespace PaintServer.Services
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            AutorizationDAL autorizationDAL = new AutorizationDAL();
+            IAutorizationDAL autorizationDAL = new AutorizationDALmsSQL();
 
             RegistrationResultData registrationResultData = autorizationDAL.Registration(userRegistrationData.Login, userRegistrationData.Password, userRegistrationData.FirstName, userRegistrationData.LastName);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PaintServer.DAL
 {
-    public class StatisticDAL : IStatisticDAL
+    public class StatisticDALmsSQL : IStatisticDAL
     {
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         public void AddFigureRow(int imageId, int figureId, int figureCount)

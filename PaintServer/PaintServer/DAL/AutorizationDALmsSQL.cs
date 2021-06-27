@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace PaintServer.DAL
 {
-    public class AutorizationDAL : IAutorizationDAL
+    public class AutorizationDALmsSQL : IAutorizationDAL
     {
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         private AutorizationResultData _autorizationResultData;
         private RegistrationResultData _registrationResultData;
-        public AutorizationDAL()
+        public AutorizationDALmsSQL()
         {
         }
 

@@ -14,7 +14,7 @@ namespace PaintServer.Services
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            AutorizationDAL autorizationDAL = new AutorizationDAL();
+            IAutorizationDAL autorizationDAL = new AutorizationDALmsSQL();
 
             AutorizationResultData autorizationResultData = autorizationDAL.Autorization(userAutorizationData.Login, userAutorizationData.Password);
 
