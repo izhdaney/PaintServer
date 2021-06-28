@@ -28,6 +28,8 @@ namespace PaintServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IAutorizationService, AutorizationService>();
+            services.AddTransient<IRegistrationService, RegistrationService>();
+
             services.AddTransient<IAutorizationDAL, AutorizationDALmsSQL>();
             services.AddControllers();
             services.Configure<MyConfiguration>(Configuration.GetSection("ConnectionStrings"));
