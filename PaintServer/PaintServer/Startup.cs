@@ -30,6 +30,7 @@ namespace PaintServer
             services.AddTransient<IAutorizationService, AutorizationService>();
             services.AddTransient<IRegistrationService, RegistrationService>();
             services.AddTransient<ISaveImageService, SaveImageService>();
+            services.AddTransient<ILoadImageService, LoadImageService>();
 
 
             services.AddTransient<IAutorizationDAL, AutorizationDALmsSQL>();
