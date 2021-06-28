@@ -33,6 +33,7 @@ namespace PaintServer
             services.AddTransient<ILoadImageService, LoadImageService>();
             services.AddTransient<IDeleteImageService, DeleteImageService>();
             services.AddTransient<IGetFileListService, GetFilesListService>();
+            services.AddTransient<IStatisticService, StatisticService>();
 
             services.AddTransient<IAutorizationDAL, AutorizationDALmsSQL>();
             services.AddTransient<IOperationDAL, OperationDALmsSQL>();
