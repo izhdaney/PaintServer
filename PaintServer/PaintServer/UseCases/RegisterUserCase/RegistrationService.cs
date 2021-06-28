@@ -7,15 +7,21 @@ using System.Threading.Tasks;
 
 namespace PaintServer.Services
 {
-    public class RegistrationService
+    public class RegistrationService: IRegistrationService
     {
+        private IAutorizationDAL _autorizationDAL;
+        public RegistrationService(IAutorizationDAL autorizationDAL)
+        {
+            _autorizationDAL = autorizationDAL;
+        }
+
         public RegistrationResultData RegisterUser(UserRegistrationData userRegistrationData)
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            IAutorizationDAL autorizationDAL = new AutorizationDALmsSQL();
+            //IAutorizationDAL autorizationDAL = new AutorizationDALmsSQL();
 
-            RegistrationResultData registrationResultData = autorizationDAL.Registration(userRegistrationData.Login, userRegistrationData.Password, userRegistrationData.FirstName, userRegistrationData.LastName);
+            RegistrationResultData registrationResultData = _autorizationDAL.Registration(userRegistrationData.Login, userRegistrationData.Password, userRegistrationData.FirstName, userRegistrationData.LastName);
 
             return registrationResultData;
 

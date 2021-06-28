@@ -7,15 +7,23 @@ using System.Threading.Tasks;
 
 namespace PaintServer.Services
 {
-    public class GetFilesListService
+    public class GetFilesListService:IGetFileListService
     {
+        private IOperationDAL _operationDAL;
+
+        public GetFilesListService(IOperationDAL operationDAL)
+        {
+            _operationDAL = operationDAL;
+        }
         public GetFilesListResultData GetFilesList(GetFilesListInfo getFilesListInfo)
         {
+
+          
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            IOperationDAL operationDAL = new OperationDALmsSQL();
-
-            GetFilesListResultData getFilesListResultData = operationDAL.GetFilesList(getFilesListInfo.UserId);
+           /* IOperationDAL operationDAL = new OperationDALmsSQL();
+*/
+            GetFilesListResultData getFilesListResultData = _operationDAL.GetFilesList(getFilesListInfo.UserId);
 
             return getFilesListResultData;
         }

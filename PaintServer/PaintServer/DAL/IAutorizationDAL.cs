@@ -6,7 +6,7 @@ using PaintServer.DTO;
 
 namespace PaintServer.DAL
 {
-    interface IAutorizationDAL
+    public interface IAutorizationDAL
     {
         AutorizationResultData Autorization(string login, string password);
 

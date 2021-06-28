@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 
 namespace PaintServer.Services
 {
-    public class LoadImageService
+    public class LoadImageService:ILoadImageService
     {
+        private IOperationDAL _operationDAL;
+        public LoadImageService(IOperationDAL operationDAL)
+        {
+            _operationDAL = operationDAL;
+        }
         public LoadImageResultData LoadImage(LoadImageInfo loadImageInfo)
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            IOperationDAL operationDAL = new OperationDALmsSQL();
+            //IOperationDAL operationDAL = new OperationDALmsSQL();
 
-            LoadImageResultData loadImageResultData = operationDAL.LoadImage(loadImageInfo.UserId, loadImageInfo.ImageId);
+            LoadImageResultData loadImageResultData = _operationDAL.LoadImage(loadImageInfo.UserId, loadImageInfo.ImageId);
 
             return loadImageResultData;
         }

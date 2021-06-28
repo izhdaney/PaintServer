@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaintServer.Services;
+using PaintServer.DAL;
 
 namespace PaintServer
 {
@@ -25,6 +27,18 @@ namespace PaintServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IAutorizationService, AutorizationService>();
+            services.AddTransient<IRegistrationService, RegistrationService>();
+            services.AddTransient<ISaveImageService, SaveImageService>();
+            services.AddTransient<ILoadImageService, LoadImageService>();
+            services.AddTransient<IDeleteImageService, DeleteImageService>();
+            services.AddTransient<IGetFileListService, GetFilesListService>();
+
+            services.AddTransient<IAutorizationDAL, AutorizationDALmsSQL>();
+            services.AddTransient<IOperationDAL, OperationDALmsSQL>();
+            services.AddTransient<IStatisticDAL, StatisticDALmsSQL>();
+
+
             services.AddControllers();
             services.Configure<MyConfiguration>(Configuration.GetSection("ConnectionStrings"));
         }

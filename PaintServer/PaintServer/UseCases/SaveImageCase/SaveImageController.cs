@@ -13,15 +13,20 @@ namespace PaintServer.Controllers
     [Route("operation")]
     public class SaveImageController : ControllerBase
     {
+        private ISaveImageService _saveImageService;
 
+        public SaveImageController(ISaveImageService saveImageService)
+        {
+            _saveImageService = saveImageService;
+        }
         [HttpPost]
         [Route("save")]
         public IActionResult Save([FromBody] SaveImageInfo saveImageInfo)
         {
             //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
 
-            SaveImageResultData saveImageResultData = new SaveImageService().SaveImage(saveImageInfo);
-
+            /*SaveImageResultData saveImageResultData = new SaveImageService().SaveImage(saveImageInfo);*/
+            SaveImageResultData saveImageResultData = _saveImageService.SaveImage(saveImageInfo);
             return Ok(saveImageResultData);
         }
     }
