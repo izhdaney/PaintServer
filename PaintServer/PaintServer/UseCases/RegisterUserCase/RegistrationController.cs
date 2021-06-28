@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaintServer.DAL;
 
 namespace PaintServer.Controllers
 {
@@ -12,6 +13,11 @@ namespace PaintServer.Controllers
     [Route("auth")]
     public class RegistrationController : ControllerBase
     {
+        private IRegistrationService _registrationService;
+        public RegistrationController(IRegistrationService registrationService)
+        {
+            _registrationService = registrationService;
+        }
 
         [HttpPost]
         [Route("register")]
@@ -19,7 +25,8 @@ namespace PaintServer.Controllers
         {
             //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
 
-            RegistrationResultData registrationResultData = new RegistrationService().RegisterUser(userRegistrationData);
+            //RegistrationResultData registrationResultData = new RegistrationService().RegisterUser(userRegistrationData);
+            RegistrationResultData registrationResultData = _registrationService.RegisterUser(userRegistrationData);
 
             return Ok(registrationResultData);
         }

@@ -12,14 +12,20 @@ namespace PaintServer.Controllers
     [Route("operation")]
     public class DeleteImageController : ControllerBase
     {
+        private IDeleteImageService _deleteImageService;
+
+        public DeleteImageController(IDeleteImageService deleteImageService)
+        {
+            _deleteImageService = deleteImageService;
+        }
         [HttpPost]
         [Route("delete")]
         public IActionResult Load([FromBody] DeleteImageInfo deleteImageInfo)
         {
 
             
-            DeleteImageResultData deleteImageResultData = new DeleteImageService().DeleteImage(deleteImageInfo);
-
+    /*        DeleteImageResultData deleteImageResultData = new DeleteImageService().DeleteImage(deleteImageInfo);*/
+            DeleteImageResultData deleteImageResultData = _deleteImageService.DeleteImage(deleteImageInfo);
             return Ok(deleteImageResultData);
         }
     }

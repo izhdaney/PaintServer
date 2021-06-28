@@ -9,19 +9,27 @@ using Team_Project_Paint.PaintEnum;
 
 namespace PaintServer.Services
 {
-    public class SaveImageService
+    public class SaveImageService: ISaveImageService
     {
+        private IOperationDAL _operationDAL;
+        private IStatisticDAL _statisticDAL;
+
+        public SaveImageService(IOperationDAL operationDAL, IStatisticDAL statisticDAL)
+        {
+            _operationDAL = operationDAL;
+            _statisticDAL = statisticDAL;
+        }
         public SaveImageResultData SaveImage(SaveImageInfo saveImageInfo)
         {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            IOperationDAL operationDAL = new OperationDALmsSQL();
-            IStatisticDAL statisticDAL = new StatisticDALmsSQL();
+            //IOperationDAL operationDAL = new OperationDALmsSQL();
+            //IStatisticDAL statisticDAL = new StatisticDALmsSQL();
             DateTime dateTime = DateTime.Now;
 
-            SaveImageResultData saveImageResultData = operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, dateTime,saveImageInfo.ImageData);
+            SaveImageResultData saveImageResultData = _operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, dateTime,saveImageInfo.ImageData);
 
-            int lastImageId = operationDAL.GetImageId(saveImageInfo.Name, saveImageInfo.UserId, dateTime);
+            int lastImageId = _operationDAL.GetImageId(saveImageInfo.Name, saveImageInfo.UserId, dateTime);
 
             if (saveImageInfo.ImageType == "json" && lastImageId != 0)
             {
@@ -44,7 +52,7 @@ namespace PaintServer.Services
                 for (int i = 1; i <= 8; i++)
                 {
                     //resultTest += $"{mass[i].ToString()} {((EShapeType)i).ToString()}\n";
-                    statisticDAL.AddFigureRow(lastImageId, i, mass[i]);
+                    _statisticDAL.AddFigureRow(lastImageId, i, mass[i]);
 
                 }
             }

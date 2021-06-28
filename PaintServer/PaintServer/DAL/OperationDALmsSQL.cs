@@ -60,9 +60,9 @@ namespace PaintServer.DAL
                     {
                         var a = reader["ImageName"];
                         var b = reader["UserId"];
-                        var c = reader["CreateDate"];
+                        //var c = reader["CreateDate"];
 
-                        if (name == a.ToString() && userId == (int)(b) && Convert.ToDateTime(c) == dateTime)
+                        if (name == a.ToString() && userId == (int)(b) /*&& Convert.ToDateTime(c) == dateTime*/)
                         {
                             var imageId = reader["ImageId"];
 
@@ -157,18 +157,18 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages] WHERE (UserID={userId} AND ImageID={imageId})", connection))
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages]  WHERE (UserID={userId} AND SavedImages.ImageID={imageId})", connection))
                 {
 
                     var res = command.ExecuteNonQuery();
-                    
-                    if (res==1)
+
+                    if (res == 1)
                     {
                         deleteImageResultData = new DeleteImageResultData()
                         {
 
-                            LoadImageResult = true,
-                            LoadImageResultMessage = "Image deleted OK"
+                            DeleteImageResult = true,
+                            DeleteImageResultMessage = "Image deleted OK"
                         };
                     }
                     else
@@ -176,14 +176,27 @@ namespace PaintServer.DAL
                         deleteImageResultData = new DeleteImageResultData()
                         {
 
-                            LoadImageResult = false,
-                            LoadImageResultMessage = "Error Image not deleted"
+                            DeleteImageResult = false,
+                            DeleteImageResultMessage = "Error Image not deleted"
                         };
                     }
 
-                    
+
 
                     return deleteImageResultData;
+                }
+            }
+        }
+
+        public bool DeleteImageStatistics(int imageId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [ImageFiguresCount] WHERE ( ImageID={imageId})", connection))
+                {
+                    var res = command.ExecuteNonQuery();
+                    return true;
                 }
             }
         }

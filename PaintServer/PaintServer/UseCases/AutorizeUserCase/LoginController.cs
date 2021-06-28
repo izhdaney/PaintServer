@@ -9,6 +9,11 @@ namespace PaintServer.Controllers
     [Route("auth")]
     public class LoginController: ControllerBase
     {
+        private IAutorizationService _autorizationService;
+        public LoginController(IAutorizationService autorizationService)
+        {
+            _autorizationService = autorizationService;
+        }
 
             [HttpPost]
             [Route("login")]
@@ -16,7 +21,8 @@ namespace PaintServer.Controllers
             {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
 
-            AutorizationResultData autorizationResultData = new AutorizationService().AutorizeUser(userAutorizationData);
+            //AutorizationResultData autorizationResultData = new AutorizationService().AutorizeUser(userAutorizationData);
+            AutorizationResultData autorizationResultData = _autorizationService.AutorizeUser(userAutorizationData);
 
                 return Ok(autorizationResultData);
             }
