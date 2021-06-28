@@ -60,9 +60,9 @@ namespace PaintServer.DAL
                     {
                         var a = reader["ImageName"];
                         var b = reader["UserId"];
-                        var c = reader["CreateDate"];
+                        //var c = reader["CreateDate"];
 
-                        if (name == a.ToString() && userId == (int)(b) && Convert.ToDateTime(c) == dateTime)
+                        if (name == a.ToString() && userId == (int)(b) /*&& Convert.ToDateTime(c) == dateTime*/)
                         {
                             var imageId = reader["ImageId"];
 
@@ -157,7 +157,7 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages] WHERE (UserID={userId} AND ImageID={imageId})", connection))
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages]  WHERE (UserID={userId} AND SavedImages.ImageID={imageId})", connection))
                 {
 
                     var res = command.ExecuteNonQuery();
@@ -187,5 +187,41 @@ namespace PaintServer.DAL
                 }
             }
         }
+
+        //public int DeleteImageStatistics(int imageId)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
+        //        using (SqlCommand command = new SqlCommand($"DELETE FROM [ImageFiguresCount] WHERE ( ImageID={imageId})", connection))
+        //        {
+
+        //            var res = command.ExecuteNonQuery();
+
+        //            if (res > 0)
+        //            {
+        //                deleteImageResultData = new DeleteImageResultData()
+        //                {
+
+        //                    LoadImageResult = true,
+        //                    LoadImageResultMessage = "Image deleted OK"
+        //                };
+        //            }
+        //            else
+        //            {
+        //                deleteImageResultData = new DeleteImageResultData()
+        //                {
+
+        //                    LoadImageResult = false,
+        //                    LoadImageResultMessage = "Error Image not deleted"
+        //                };
+        //            }
+
+
+
+        //            return deleteImageResultData;
+        //        }
+        //    }
+        //}
     }
 }
