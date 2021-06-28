@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PaintServer.Services;
+using PaintServer.DAL;
 
 namespace PaintServer
 {
@@ -27,7 +28,7 @@ namespace PaintServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IAutorizationService, AutorizationService>();
-
+            services.AddTransient<IAutorizationDAL, AutorizationDALmsSQL>();
             services.AddControllers();
             services.Configure<MyConfiguration>(Configuration.GetSection("ConnectionStrings"));
         }
