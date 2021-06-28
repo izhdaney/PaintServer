@@ -17,9 +17,16 @@ namespace PaintServer.Services
             //IOperationDAL operationDAL = new OperationDALmsSQL();
 
             //LoadImageResultData loadImageResultData = operationDAL.LoadImage(loadImageInfo.UserId, loadImageInfo.ImageId);
-            DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage(deleteImageInfo.UserId, deleteImageInfo.ImageId);
+            if (_operationDAL.DeleteImageStatistics(deleteImageInfo.ImageId))
+            {
+                DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage(deleteImageInfo.UserId, deleteImageInfo.ImageId);
+                return deleteImageResultData;
+            }
 
-            return deleteImageResultData;
+            return new DeleteImageResultData() { DeleteImageResult = false, DeleteImageResultMessage = "Error while deleting Image" };
+            
+
+            
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿
 namespace PaintServer.DTO
 {
-    public class DeleteImageResultData
-    {
-        public bool LoadImageResult { get; set; }
-        public string LoadImageResultMessage { get; set; }
-    }
+    
+        public class DeleteImageResultData
+        {
+            public bool DeleteImageResult { get; set; }
+            public string DeleteImageResultMessage { get; set; }
+        }
+    
 }
