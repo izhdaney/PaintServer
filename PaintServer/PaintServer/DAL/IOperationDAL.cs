@@ -18,5 +18,7 @@ namespace PaintServer.DAL
 
         GetFilesListResultData GetFilesList(int UserId);
 
+        bool DeleteImageStatistics(int imageId);
+
     }
 }
