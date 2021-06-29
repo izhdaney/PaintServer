@@ -20,5 +20,7 @@ namespace PaintServer.DAL
 
         bool DeleteImageStatistics(int imageId);
 
+        bool IsImageExists(string filename, int userId);
+
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaintServer.Exeptions;
 
 namespace PaintServer.DAL
 {
@@ -13,63 +14,95 @@ namespace PaintServer.DAL
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
         public SaveImageResultData SaveImage(string name, int size, string imageType, int userId, DateTime dateTime, string imageData)
         {
+            
+
             SaveImageResultData saveImageResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                var queryString = $"INSERT INTO dbo.SavedImages (UserId, ImageName, CreateDate, FileSize,ImageType,ImageData) VALUES ('{userId}','{name}','{dateTime}','{size}','{imageType}','{imageData}')";
+                var queryString = $"INSERT INTO dbo.SavedImages (UserId, ImageName, CreateDate, FileSize,ImageType,ImageData) VALUES (@userId,@ImageName, @CreateDate, @Filesize, @ImageType,@ImageData)";
+
+                //var queryString = $"INSERT INTO dbo.SavedImages (UserId, ImageName, CreateDate, FileSize,ImageType,ImageData) VALUES
+                //('{userId}','{name}','{dateTime}','{size}','{imageType}','{imageData}')";
+                //UserId, ImageName, CreateDate, FileSize,ImageType,ImageData
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(queryString, connection))
                 {
-                    try
+                    command.Parameters.Add(new SqlParameter()
+                    {   DbType=System.Data.DbType.Int32,
+                        ParameterName="@UserId",
+                        Value=userId
+                    });
+                    command.Parameters.Add(new SqlParameter()
                     {
-                        command.ExecuteNonQuery();
+                        DbType = System.Data.DbType.String,
+                        ParameterName = "@ImageName",
+                        Value = name
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.DateTime2,
+                        ParameterName = "@CreateDate",
+                        Value = dateTime
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@FileSize",
+                        Value = size
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        ParameterName = "@ImageType",
+                        Value = imageType
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        ParameterName = "@ImageData",
+                        Value = imageData
+                    });
+                    command.ExecuteNonQuery();
                         saveImageResultData = new SaveImageResultData()
                         {
                             SaveImageResult = true,
                             SaveImageResultMessage = "Good"
                         };
-
                         return saveImageResultData;
-
-                    }
-                    catch
-                    {
-                        saveImageResultData = new SaveImageResultData()
-                        {
-                            SaveImageResult = false,
-                            SaveImageResultMessage = "Error Image not saved"
-                        };
-
-                        return saveImageResultData;
-                    }
                 }
-
             }
         }
-
         public int GetImageId(string name, int userId, DateTime dateTime)
         {
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId], [CreateDate]  FROM dbo.SavedImages", connection))
+                using (SqlCommand command = new SqlCommand("SELECT [ImageName], [UserId], [ImageId], [CreateDate]  FROM dbo.SavedImages WHERE ([ImageName]=@ImageName AND [UserId]=@UserId)", connection))
                 {
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
+                    command.Parameters.Add(new SqlParameter()
                     {
-                        var a = reader["ImageName"];
-                        var b = reader["UserId"];
-                        //var c = reader["CreateDate"];
-
-                        if (name == a.ToString() && userId == (int)(b) /*&& Convert.ToDateTime(c) == dateTime*/)
-                        {
-                            var imageId = reader["ImageId"];
-
-                            return (int)(imageId);
-                        }
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@UserId",
+                        Value = userId
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        ParameterName = "@ImageName",
+                        Value = name
+                    });
+                    var reader = command.ExecuteReader();
+                    
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        return Convert.ToInt32(reader["ImageId"]);
                     }
-                    return 0;
+                    else
+                    {
+                        throw new DatabaseOperationErrorException("Unexpected database error while saving image");
+                    }
                 }
             }
         }
@@ -199,6 +232,41 @@ namespace PaintServer.DAL
                 {
                     var res = command.ExecuteNonQuery();
                     return true;
+                }
+            }
+        }
+
+        public bool IsImageExists(string filename, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT SavedImages.ImageName FROM SavedImages WHERE ([ImageName]=@ImageName AND [UserId]=@UserID)", connection))
+                {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        Value = filename,
+                        ParameterName = "@ImageName"
+                    });
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        Value = userId,
+                        ParameterName = "@UserId"
+                    });
+
+                    var reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    
                 }
             }
         }
