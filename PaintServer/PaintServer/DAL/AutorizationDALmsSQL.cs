@@ -84,28 +84,13 @@ namespace PaintServer.DAL
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(queryString, connection))
                 {
-                    try
-                    {
                         command.ExecuteNonQuery();
                         _registrationResultData = new RegistrationResultData()
                         {
                             RegistrationResult = true,
                             RegistrationResultMessage = "Good"
                         };
-
                         return _registrationResultData;
-
-                    }
-                    catch
-                    {
-                        _registrationResultData = new RegistrationResultData()
-                        {
-                            RegistrationResult = false,
-                            RegistrationResultMessage = "Can't create such user"
-                        };
-
-                        return _registrationResultData;
-                    }
                 }
             }
         }
