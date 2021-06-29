@@ -35,6 +35,22 @@ namespace PaintServer.Middleware
                         // custom application error
                         response.StatusCode = (int)HttpStatusCode.Forbidden;
                         break;
+                    case AutorizationFailException e:
+                        // custom application error
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+                    case DatabaseConnectionErrorException e:
+                        // custom application error
+                        response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                        break;
+                    case DatabaseOperationErrorException e:
+                        // custom application error
+                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        break;
+                    case ParameterValidationException e:
+                        // custom application error
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        break;
                     case Exception e:
                         // not found error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
