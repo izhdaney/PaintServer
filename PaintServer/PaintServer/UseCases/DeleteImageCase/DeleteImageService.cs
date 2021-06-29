@@ -32,7 +32,7 @@ namespace PaintServer.Services
 
             if (_operationDAL.DeleteImageStatistics(deleteImageInfo.ImageId))
             {
-                DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage(deleteImageInfo.UserId, deleteImageInfo.ImageId);
+                DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage( deleteImageInfo.ImageId);
                 return deleteImageResultData;
             }
 
