@@ -26,8 +26,8 @@ namespace PaintServer.Controllers
         [Route("getsavedfileslist")]
         public IActionResult Load([FromBody] GetFilesListInfo getFilesListInfo)
         {
-
-           /* GetFilesListResultData getFilesListResultData = new GetFilesListService().GetFilesList(getFilesListInfo);*/
+            
+            /* GetFilesListResultData getFilesListResultData = new GetFilesListService().GetFilesList(getFilesListInfo);*/
             GetFilesListResultData getFilesListResultData = _getFileListService.GetFilesList(getFilesListInfo);
 
             return Ok(getFilesListResultData);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PaintServer.DAL;
-
+using PaintServer.Exeptions;
 namespace PaintServer.Controllers
 {
     [ApiController]
@@ -25,6 +25,7 @@ namespace PaintServer.Controllers
         {
             //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
 
+            
             //RegistrationResultData registrationResultData = new RegistrationService().RegisterUser(userRegistrationData);
             RegistrationResultData registrationResultData = _registrationService.RegisterUser(userRegistrationData);
 

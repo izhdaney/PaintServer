@@ -24,7 +24,7 @@ namespace PaintServer.Controllers
         public IActionResult Save([FromBody] SaveImageInfo saveImageInfo)
         {
             //1  Ilya Zhdaney  zhdaney @gmail.com QWE123qazQQ
-
+            
             /*SaveImageResultData saveImageResultData = new SaveImageService().SaveImage(saveImageInfo);*/
             SaveImageResultData saveImageResultData = _saveImageService.SaveImage(saveImageInfo);
             return Ok(saveImageResultData);

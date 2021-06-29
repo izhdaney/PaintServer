@@ -24,7 +24,7 @@ namespace PaintServer.Controllers
         [Route("getuserstatistic")]
         public IActionResult Load([FromBody] StatisticInfo statisticInfo)
         {
-
+            
             /* GetFilesListResultData getFilesListResultData = new GetFilesListService().GetFilesList(getFilesListInfo);*/
             StatisticResultData statisticResultData = _statisticService.GetUserStatistics(statisticInfo);
 
