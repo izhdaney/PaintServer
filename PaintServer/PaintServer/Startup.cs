@@ -54,7 +54,7 @@ namespace PaintServer
 
             app.UseAuthorization();
 
-            app.UseMiddleware<PaintServerExceptionMiddleware>();
+            //app.UseMiddleware<PaintServerExceptionMiddleware>();
 
             //app.UseExceptionHandler
 

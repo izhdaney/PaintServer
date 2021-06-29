@@ -294,7 +294,7 @@ namespace PaintServer.DAL
                     {
                         DbType = System.Data.DbType.Int32,
                         Value = imageId,
-                        ParameterName = "@ImagId"
+                        ParameterName = "@ImageId"
                     });
                     
 
@@ -318,13 +318,13 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT SavedImages.ImageName FROM SavedImages WHERE ([ImageId]=@ImageID)", connection))
+                using (SqlCommand command = new SqlCommand("SELECT SavedImages.ImageName, UserId FROM SavedImages WHERE ([ImageId]=@ImageID)", connection))
                 {
                     command.Parameters.Add(new SqlParameter()
                     {
                         DbType = System.Data.DbType.Int32,
                         Value = imageId,
-                        ParameterName = "@ImagId"
+                        ParameterName = "@ImageId"
                     });
 
 
