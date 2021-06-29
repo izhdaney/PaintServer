@@ -156,11 +156,17 @@ namespace PaintServer.DAL
             GetFilesListResultData getFilesListResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                var queryString = $"SELECT [ImageId], [ImageName], [CreateDate], [FileSize], [ImageType]  FROM dbo.SavedImages WHERE ([UserId] = {userId.ToString()}) ORDER BY [CreateDate] DESC";
+                var queryString = $"SELECT [ImageId], [ImageName], [CreateDate], [FileSize], [ImageType]  FROM dbo.SavedImages WHERE ([UserId] = @UserID) ORDER BY [CreateDate] DESC";
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(queryString, connection))
                 {
                     getFilesListResultData = new GetFilesListResultData();
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@UserId",
+                        Value = userId
+                    });
 
                     var reader = command.ExecuteReader();
                     while (reader.Read())
