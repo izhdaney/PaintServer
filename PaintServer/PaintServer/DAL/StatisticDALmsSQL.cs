@@ -14,7 +14,7 @@ namespace PaintServer.DAL
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                var queryString = $"INSERT INTO dbo.ImageFiguresCount (ImageID, TypeID, FiguresCount) VALUES (@UmageID, @TypeId, @FiguresCount)";
+                var queryString = $"INSERT INTO dbo.ImageFiguresCount (ImageID, TypeID, FiguresCount) VALUES (@ImageID, @TypeId, @FiguresCount)";
                 connection.Open();
 
                 using (SqlCommand command = new SqlCommand(queryString, connection))
@@ -34,7 +34,7 @@ namespace PaintServer.DAL
                     command.Parameters.Add(new SqlParameter()
                     {
                         DbType = System.Data.DbType.Int32,
-                        ParameterName = "@FigureCount",
+                        ParameterName = "@FiguresCount",
                         Value = figureCount
                     });
                     command.ExecuteNonQuery();
