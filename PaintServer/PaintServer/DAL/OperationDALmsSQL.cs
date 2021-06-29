@@ -115,38 +115,38 @@ namespace PaintServer.DAL
                 connection.Open();
                 
                 
-                using (SqlCommand command = new SqlCommand("SELECT [ImageData], [ImageType], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
+                using (SqlCommand command = new SqlCommand("SELECT [ImageData], [ImageType], [UserId], [ImageId]  FROM dbo.SavedImages WHERE ([ImageID]=@ImageID)", connection))
                 {
 
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@ImageId",
+                        Value = imageId
+                    });
                     var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        var a = reader["UserId"];
-                        var b = reader["ImageId"];
 
-                        if (userId == (int)a && imageId == (int)b)
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        if ( Convert.ToInt32(reader["UserId"])!=userId)
                         {
-                            loadImageResultData = new LoadImageResultData()
-                            {
-                                ImageData = reader["ImageData"].ToString(),
-                                ImageType = reader["ImageType"].ToString(),
-                                LoadImageResult = true,
-                                LoadImageResultMessage = "Good"
-                            };
-
-                            return loadImageResultData;
+                            throw new AccessLevelException("You have no permission to load this image");
                         }
+                        loadImageResultData = new LoadImageResultData()
+                        {
+                            ImageData = reader["ImageData"].ToString(),
+                            ImageType = reader["ImageType"].ToString(),
+                            LoadImageResult = true,
+                            LoadImageResultMessage = "Good"
+                        };
+
+                        return loadImageResultData;
                     }
-
-                    loadImageResultData = new LoadImageResultData()
+                    else
                     {
-                        ImageData = "",
-                        ImageType = "",
-                        LoadImageResult = false,
-                        LoadImageResultMessage = "Error Image not opened"
-                    };
-
-                    return loadImageResultData;
+                        throw new ParameterValidationException("No file with such ID");
+                    }
                 }
             }
         }
