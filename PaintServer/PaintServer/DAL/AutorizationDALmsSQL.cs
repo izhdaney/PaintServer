@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaintServer.Exeptions;
 
 namespace PaintServer.DAL
 {
     public class AutorizationDALmsSQL : IAutorizationDAL
     {
         private string _connectionString = "Server=localhost;Database=PaintDB;User Id=paint;password=paint;Trusted_Connection=False;MultipleActiveResultSets=true;";
-        private AutorizationResultData _autorizationResultData;
+        
         private RegistrationResultData _registrationResultData;
         public AutorizationDALmsSQL()
         {
@@ -22,28 +23,24 @@ namespace PaintServer.DAL
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                    connection.Open();
                 using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.PaintUsers WHERE [Email]=@Email", connection))
                 {
                     command.Parameters.Add(new SqlParameter()
                     {
                         DbType = System.Data.DbType.String,
                         Value = login,
-                        Direction=System.Data.ParameterDirection.Input,
                         ParameterName="@Email"
-                        
-
-
                     }); 
+                                       
                     var reader = command.ExecuteReader();
-                    while (reader.Read())
+                    
+                    if (reader.HasRows)
                     {
-                        var a = reader["Email"];
-                        var b = reader["Password"];
-
-                        if (login == a.ToString() && password == b.ToString())
+                        reader.Read();
+                        if (reader["Password"].ToString()==password)
                         {
-                            _autorizationResultData = new AutorizationResultData()
+                            var autorizationResultData = new AutorizationResultData()
                             {
                                 UserId = Convert.ToInt32(reader["Id"]),
                                 FirstName = reader["FirstName"].ToString(),
@@ -53,38 +50,28 @@ namespace PaintServer.DAL
                                 AutorizationResultMessage = "Good"
                             };
 
-                            //return _autorizationResultData;
-                            break;
+                            using (SqlCommand commandSession = new SqlCommand($"INSERT INTO UserSessions (UserId) VALUES (@UserID )", connection))
+                            {
+                                commandSession.Parameters.Add(new SqlParameter()
+                                { 
+                                    ParameterName = "@UserID",
+                                    Value = autorizationResultData.UserId,
+                                    DbType = System.Data.DbType.Int32
+                                });
+                                commandSession.ExecuteNonQuery();
+                            }
+                            return autorizationResultData;
+                        }
+                        else
+                        {
+                            throw new AutorizationFailException("Incorrect password");
                         }
                     }
-
-                    if (_autorizationResultData == null)
+                    else
                     {
-                        _autorizationResultData = new AutorizationResultData()
-                        {
-                            UserId = 0,
-                            FirstName = "",
-                            LastName = "",
-                            Login = "",
-                            AutorizationResultCode = 666,
-                            AutorizationResultMessage = "Login or password invalid"
-                        };
-                    }
-
-
-
-                    if (_autorizationResultData.AutorizationResultCode == 200)
-                    {
-                        using (SqlCommand commandSession = new SqlCommand($"INSERT INTO UserSessions (UserId) VALUES ( {_autorizationResultData.UserId})", connection))
-                        {
-                            commandSession.ExecuteNonQuery();
-                        }
-
-
+                        throw new AutorizationFailException("No such user in database");
                     }
                 }
-
-                return _autorizationResultData;
             }
         }
 
