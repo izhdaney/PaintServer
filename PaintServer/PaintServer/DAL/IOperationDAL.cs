@@ -22,5 +22,11 @@ namespace PaintServer.DAL
 
         bool IsImageExists(string filename, int userId);
 
+        bool IsImageExists(int imageId);
+
+        bool IsImageBelongs(int imageId, int userId);
+
+
+
     }
 }

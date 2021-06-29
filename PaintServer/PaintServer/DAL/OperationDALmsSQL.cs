@@ -192,15 +192,20 @@ namespace PaintServer.DAL
             }
         }
 
-        public DeleteImageResultData DeleteImage(int userId, int imageId)
+        public DeleteImageResultData DeleteImage( int imageId)
         {
             DeleteImageResultData deleteImageResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages]  WHERE (UserID={userId} AND SavedImages.ImageID={imageId})", connection))
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [SavedImages]  WHERE (SavedImages.ImageID=@ImageId)", connection))
                 {
-
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@ImageId",
+                        Value = imageId
+                    });
                     var res = command.ExecuteNonQuery();
 
                     if (res == 1)
@@ -214,12 +219,7 @@ namespace PaintServer.DAL
                     }
                     else
                     {
-                        deleteImageResultData = new DeleteImageResultData()
-                        {
-
-                            DeleteImageResult = false,
-                            DeleteImageResultMessage = "Error Image not deleted"
-                        };
+                        throw new DatabaseOperationErrorException("Error while deleting image");
                     }
 
 
@@ -234,8 +234,14 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand($"DELETE FROM [ImageFiguresCount] WHERE ( ImageID={imageId})", connection))
+                using (SqlCommand command = new SqlCommand($"DELETE FROM [ImageFiguresCount] WHERE ( ImageID=@ImageId)", connection))
                 {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        ParameterName = "@ImageId",
+                        Value = imageId
+                    });
                     var res = command.ExecuteNonQuery();
                     return true;
                 }
@@ -273,6 +279,75 @@ namespace PaintServer.DAL
                         return false;
                     }
                     
+                }
+            }
+        }
+
+        public bool IsImageExists(int imageId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT SavedImages.ImageName FROM SavedImages WHERE ([ImageId]=@ImageID)", connection))
+                {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        Value = imageId,
+                        ParameterName = "@ImagId"
+                    });
+                    
+
+                    var reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+            }
+        }
+
+        public bool IsImageBelongs(int imageId, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT SavedImages.ImageName FROM SavedImages WHERE ([ImageId]=@ImageID)", connection))
+                {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.Int32,
+                        Value = imageId,
+                        ParameterName = "@ImagId"
+                    });
+
+
+                    var reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        if (Convert.ToInt32(reader["UserId"])==userId)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
                 }
             }
         }
