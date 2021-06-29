@@ -19,12 +19,22 @@ namespace PaintServer.DAL
 
         public AutorizationResultData Autorization(string login, string password)
         {
-            
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.PaintUsers", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.PaintUsers WHERE [Email]=@Email", connection))
                 {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        Value = login,
+                        Direction=System.Data.ParameterDirection.Input,
+                        ParameterName="@Email"
+                        
+
+
+                    }); 
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -43,24 +53,41 @@ namespace PaintServer.DAL
                                 AutorizationResultMessage = "Good"
                             };
 
-                            return _autorizationResultData;
+                            //return _autorizationResultData;
+                            break;
                         }
                     }
 
-                    _autorizationResultData = new AutorizationResultData()
+                    if (_autorizationResultData == null)
                     {
-                        UserId = 0,
-                        FirstName = "",
-                        LastName = "",
-                        Login = "",
-                        AutorizationResultCode = 666,
-                        AutorizationResultMessage = "Login or password invalide"
-                    };
+                        _autorizationResultData = new AutorizationResultData()
+                        {
+                            UserId = 0,
+                            FirstName = "",
+                            LastName = "",
+                            Login = "",
+                            AutorizationResultCode = 666,
+                            AutorizationResultMessage = "Login or password invalid"
+                        };
+                    }
 
-                    return _autorizationResultData;
+
+
+                    if (_autorizationResultData.AutorizationResultCode == 200)
+                    {
+                        using (SqlCommand commandSession = new SqlCommand($"INSERT INTO UserSessions (UserId) VALUES ( {_autorizationResultData.UserId})", connection))
+                        {
+                            commandSession.ExecuteNonQuery();
+                        }
+
+
+                    }
                 }
+
+                return _autorizationResultData;
             }
         }
+
 
         public RegistrationResultData Registration(string login, string password, string firstName, string lastName)
         {
