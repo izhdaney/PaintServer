@@ -80,6 +80,8 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
+                
+                
                 using (SqlCommand command = new SqlCommand("SELECT [ImageData], [ImageType], [UserId], [ImageId]  FROM dbo.SavedImages", connection))
                 {
 
