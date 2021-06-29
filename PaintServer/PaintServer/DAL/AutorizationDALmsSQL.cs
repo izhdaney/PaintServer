@@ -23,8 +23,18 @@ namespace PaintServer.DAL
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.PaintUsers", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.PaintUsers WHERE [Email]=@Email", connection))
                 {
+                    command.Parameters.Add(new SqlParameter()
+                    {
+                        DbType = System.Data.DbType.String,
+                        Value = login,
+                        Direction=System.Data.ParameterDirection.Input,
+                        ParameterName="@Email"
+                        
+
+
+                    }); 
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {

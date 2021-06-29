@@ -29,10 +29,23 @@ namespace PaintServer.DAL
             StatisticResultData statisticResultData;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                var queryString = $"SELECT [N],[R],[C]FROM[dbo].[VW_UserStatistics] ORDER BY R";
+                //var queryString = $"SELECT [N],[R],[C]FROM[dbo].[VW_UserStatistics] ORDER BY R";
+                var queryString = "sp_PaintUserStatistics";
+
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(queryString, connection))
                 {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter sqlParameter = new SqlParameter()
+                    {
+
+                        ParameterName = "@UserrrID",
+                        Direction = System.Data.ParameterDirection.Input,
+                        Value = userId,
+                        DbType = System.Data.DbType.Int32
+
+                    };
+                    command.Parameters.Add(sqlParameter);
                     statisticResultData = new StatisticResultData();
 
                     var reader = command.ExecuteReader();
