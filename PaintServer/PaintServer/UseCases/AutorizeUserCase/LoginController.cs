@@ -20,7 +20,7 @@ namespace PaintServer.Controllers
             public IActionResult Login([FromBody] UserAutorizationData userAutorizationData)
             {
             //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
-
+            
             //AutorizationResultData autorizationResultData = new AutorizationService().AutorizeUser(userAutorizationData);
             AutorizationResultData autorizationResultData = _autorizationService.AutorizeUser(userAutorizationData);
 

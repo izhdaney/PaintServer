@@ -18,7 +18,7 @@ namespace PaintServer.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task  Invoke(HttpContext context)
         {
             try
             {
@@ -45,9 +45,12 @@ namespace PaintServer.Middleware
                         break;
                 }
 
-                var result = JsonSerializer.Serialize(new { message = error?.Message });
-                await response.WriteAsync(result);
+                //var result = JsonSerializer.Serialize(new { message = error?.Message });
+                var result = error?.Message;
+                await  response.WriteAsync(result);
+                
             }
+            
         }
     }
 }

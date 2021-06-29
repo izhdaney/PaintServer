@@ -25,7 +25,7 @@ namespace PaintServer.Controllers
         {
 
             
-    /*        DeleteImageResultData deleteImageResultData = new DeleteImageService().DeleteImage(deleteImageInfo);*/
+            /*        DeleteImageResultData deleteImageResultData = new DeleteImageService().DeleteImage(deleteImageInfo);*/
             DeleteImageResultData deleteImageResultData = _deleteImageService.DeleteImage(deleteImageInfo);
             return Ok(deleteImageResultData);
         }

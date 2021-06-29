@@ -21,7 +21,7 @@ namespace PaintServer.Controllers
             [Route("load")]
             public IActionResult Load([FromBody] LoadImageInfo loadImageInfo)
             {
-
+            
             //LoadImageResultData loadImageResultData = new LoadImageService().LoadImage(loadImageInfo);
             LoadImageResultData loadImageResultData = _loadImageService.LoadImage(loadImageInfo);
 
