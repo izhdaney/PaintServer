@@ -35,7 +35,7 @@ namespace PaintServer
 
 
             services.AddControllers();
-            services.Configure<MyConfiguration>(Configuration.GetSection("ConnectionStrings"));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +54,7 @@ namespace PaintServer
 
             app.UseAuthorization();
 
-            app.UseMiddleware<PaintServerExceptionMiddleware>();
+            //app.UseMiddleware<PaintServerExceptionMiddleware>();
 
             //app.UseExceptionHandler
 

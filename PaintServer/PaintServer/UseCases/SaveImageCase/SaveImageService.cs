@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Team_Project_Paint.Class.OperationWithFigures;
 using Team_Project_Paint.PaintEnum;
+using PaintServer.Exeptions;
+
 
 namespace PaintServer.Services
 {
@@ -21,11 +23,12 @@ namespace PaintServer.Services
         }
         public SaveImageResultData SaveImage(SaveImageInfo saveImageInfo)
         {
-            //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
-
-            //IOperationDAL operationDAL = new OperationDALmsSQL();
-            //IStatisticDAL statisticDAL = new StatisticDALmsSQL();
             DateTime dateTime = DateTime.Now;
+
+            if (_operationDAL.IsImageExists(saveImageInfo.Name, saveImageInfo.UserId))
+            {
+                throw new ParameterValidationException("File with same name already exist");
+            }
 
             SaveImageResultData saveImageResultData = _operationDAL.SaveImage(saveImageInfo.Name, saveImageInfo.FileSize, saveImageInfo.ImageType, saveImageInfo.UserId, dateTime,saveImageInfo.ImageData);
 

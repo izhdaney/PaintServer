@@ -1,5 +1,6 @@
 ﻿using PaintServer.DAL;
 using PaintServer.DTO;
+using PaintServer.Exeptions;
 
 namespace PaintServer.Services
 {
@@ -12,14 +13,26 @@ namespace PaintServer.Services
         }
         public DeleteImageResultData DeleteImage(DeleteImageInfo deleteImageInfo)
         {
-            //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
+            
+            if (_operationDAL.IsImageExists(deleteImageInfo.ImageId))
+            {
+                if (_operationDAL.IsImageBelongs(deleteImageInfo.ImageId, deleteImageInfo.UserId))
+                {
 
-            //IOperationDAL operationDAL = new OperationDALmsSQL();
+                }
+                else
+                {
+                    throw new AccessLevelException("You are not owner of this image. Can't delete");
+                }
+            }
+            else
+            {
+                throw new ParameterValidationException("Image with such id not found");
+            }
 
-            //LoadImageResultData loadImageResultData = operationDAL.LoadImage(loadImageInfo.UserId, loadImageInfo.ImageId);
             if (_operationDAL.DeleteImageStatistics(deleteImageInfo.ImageId))
             {
-                DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage(deleteImageInfo.UserId, deleteImageInfo.ImageId);
+                DeleteImageResultData deleteImageResultData = _operationDAL.DeleteImage( deleteImageInfo.ImageId);
                 return deleteImageResultData;
             }
 

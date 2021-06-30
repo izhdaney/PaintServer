@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaintServer.Helpers;
+using PaintServer.Exeptions;
 
 namespace PaintServer.Services
 {
@@ -17,9 +19,16 @@ namespace PaintServer.Services
 
         public RegistrationResultData RegisterUser(UserRegistrationData userRegistrationData)
         {
-            //1  Ilya Zhdaney  zhdaney@gmail.com QWE123qazQQ
+            var validator = new Validation();
 
-            //IAutorizationDAL autorizationDAL = new AutorizationDALmsSQL();
+            var res = validator.NewUserValidation(userRegistrationData.FirstName,
+                                                    userRegistrationData.LastName,
+                                                      userRegistrationData.Login,
+                                                       userRegistrationData.Password);
+            if (res.BooleanValue==false)
+            {
+                throw new ParameterValidationException(res.StringValue);
+            }
 
             RegistrationResultData registrationResultData = _autorizationDAL.Registration(userRegistrationData.Login, userRegistrationData.Password, userRegistrationData.FirstName, userRegistrationData.LastName);
 

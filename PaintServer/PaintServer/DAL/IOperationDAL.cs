@@ -12,13 +12,21 @@ namespace PaintServer.DAL
 
         LoadImageResultData LoadImage(int userId, int imageId);
 
-        DeleteImageResultData DeleteImage(int userId, int imageId);
+        DeleteImageResultData DeleteImage(int imageId);
 
         int GetImageId(string name, int userId, DateTime dateTime);
 
         GetFilesListResultData GetFilesList(int UserId);
 
         bool DeleteImageStatistics(int imageId);
+
+        bool IsImageExists(string filename, int userId);
+
+        bool IsImageExists(int imageId);
+
+        bool IsImageBelongs(int imageId, int userId);
+
+
 
     }
 }
